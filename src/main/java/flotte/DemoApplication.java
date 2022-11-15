@@ -1,4 +1,4 @@
-package com.example.demo;
+package flotte;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
