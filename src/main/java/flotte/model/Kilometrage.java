@@ -16,13 +16,16 @@ public class Kilometrage {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(columnDefinition = "DATE")
+    @Column(columnDefinition = "DATE", name= "kilometrage_date")
     private LocalDate date;
 
+    @Column(name= "counter_start")
     private Long start;
 
+    @Column(name= "counter_end")
     private Long end;
 
     @ManyToOne
+    @JoinColumn(name="vehicle_id")
     private Vehicle vehicle;
 }
