@@ -46,7 +46,7 @@ public class VehicleController {
     }
 
     @PostMapping(
-            value="/vehicle",
+            value="/vehicles",
             consumes= {MediaType.APPLICATION_JSON_VALUE},
             produces= {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> createVehicle(@RequestBody Vehicle vehicle) {
@@ -62,7 +62,7 @@ public class VehicleController {
 
 
     @PutMapping(
-            value="/vehicle/{vehicle_id}",
+            value="/vehicles/{vehicle_id}",
             consumes= {MediaType.APPLICATION_JSON_VALUE},
             produces= {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> vehicleUpdate(@PathVariable("vehicle_id") Long vehicleId, @RequestBody Vehicle vehicle) {

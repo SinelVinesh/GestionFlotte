@@ -26,4 +26,8 @@ public class UserService {
         }
         return null;
     }
+
+    public boolean logout(String token) {
+        return tokenService.removeToken(token);
+    }
 }

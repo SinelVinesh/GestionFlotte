@@ -9,13 +9,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.Optional;
 
 @RestController
-public class LoginController {
+public class AuthenticationController {
     private final UserService userService;
 
-    public LoginController(UserService userService) {
+    public AuthenticationController(UserService userService) {
         this.userService = userService;
     }
 
@@ -30,6 +29,17 @@ public class LoginController {
         } else {
             StatusResponse response = new StatusResponse(404,"user not found");
             return new ResponseEntity<StatusResponse>(response,HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity<?> logout(@RequestHeader("token") String token) {
+        if(userService.logout(token)) {
+            StatusResponse response = new StatusResponse(200, "successfully logout");
+            return new ResponseEntity<>(response,HttpStatus.OK);
+        } else {
+            StatusResponse response = new StatusResponse(500, "failed to logout");
+            return new ResponseEntity<>(response,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

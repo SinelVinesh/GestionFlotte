@@ -26,7 +26,7 @@ public class KilometrageController {
     VehicleRepository vehicleRepository;
 
 
-    @GetMapping(value="/vehicle/{vehicle_id}/kilometrage/{kilometrage_id}")
+    @GetMapping(value="/vehicles/{vehicle_id}/kilometrage/{kilometrage_id}")
     public ResponseEntity<?> kilometrageValue(@PathVariable("vehicle_id") Long vehicleId, @PathVariable("kilometrage_id") Long kilometrageId) {
 
         Optional<Kilometrage> data = kilometrageRepository.findByVehicleIdAndId(vehicleId,kilometrageId);
@@ -40,7 +40,7 @@ public class KilometrageController {
         }
     }
 
-    @GetMapping("/vehicle/{vehicle_id}/kilometrage")
+    @GetMapping("/vehicles/{vehicle_id}/kilometrage")
     public ResponseEntity<?> kilometrageList(@PathVariable("vehicle_id") Long vehicleId) {
         Optional<List<Kilometrage>> data = kilometrageRepository.findByVehicleId(vehicleId);
         if(data.isPresent()) {
@@ -53,7 +53,7 @@ public class KilometrageController {
     }
 
     @PostMapping(
-            value="/vehicle/{vehicle_id}/kilometrage",
+            value="/vehicles/{vehicle_id}/kilometrage",
             consumes= {MediaType.APPLICATION_JSON_VALUE},
             produces= {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> createKilometrage(@PathVariable("vehicle_id") Long vehicleId, @RequestBody Kilometrage kilometrage) {
@@ -75,7 +75,7 @@ public class KilometrageController {
 
 
     @PutMapping(
-            value="/vehicle/{vehicle_id}/kilometrage/{kilometrage_id}",
+            value="/vehicles/{vehicle_id}/kilometrage/{kilometrage_id}",
             consumes= {MediaType.APPLICATION_JSON_VALUE},
             produces= {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> kilometrageUpdate(@PathVariable("vehicle_id") Long vehicleId, @PathVariable("kilometrage_id") Long kilometrageId, @RequestBody Kilometrage kilometrage) {
@@ -106,7 +106,7 @@ public class KilometrageController {
         }
     }
 
-    @DeleteMapping("/vehicle/{vehicle_id}/kilometrage/{kilometrage_id}")
+    @DeleteMapping("/vehicles/{vehicle_id}/kilometrage/{kilometrage_id}")
     public ResponseEntity<StatusResponse> kilometrageDelete(@PathVariable("vehicle_id") Long vehicleId, @PathVariable("kilometrage_id") Long kilometrageId) {
         try {
             kilometrageRepository.deleteByVehicleIdAndId(vehicleId,kilometrageId);
