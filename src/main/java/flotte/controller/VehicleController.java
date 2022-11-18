@@ -46,17 +46,17 @@ public class VehicleController {
     }
 
     @PostMapping(
-            value="/vehicle/{vehicle_id}/vehicle",
+            value="/vehicle",
             consumes= {MediaType.APPLICATION_JSON_VALUE},
             produces= {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<?> createKilometrage(@PathVariable("vehicle_id") Long vehicleId, @RequestBody Vehicle vehicle) {
+    public ResponseEntity<?> createVehicle(@RequestBody Vehicle vehicle) {
         try {
             Vehicle _vehicle = vehicleRepository.save(vehicle);
             SuccessReponse response = new SuccessReponse(_vehicle);
-            return new ResponseEntity<SuccessReponse>(response, HttpStatus.CREATED);
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
             StatusResponse response = new StatusResponse(500,"failed to save the vehicle");
-            return new ResponseEntity<StatusResponse>(response,HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -74,25 +74,25 @@ public class VehicleController {
                     _vehicle.setLicensePlate(vehicle.getLicensePlate());
                 }
                 SuccessReponse response = new SuccessReponse(vehicleRepository.save(_vehicle));
-                return new ResponseEntity<SuccessReponse>(response, HttpStatus.OK);
+                return new ResponseEntity<>(response, HttpStatus.OK);
             } else {
                 throw new Exception();
             }
         } catch (Exception e) {
             StatusResponse response = new StatusResponse(500,"failed to update vehicle");
-            return new ResponseEntity<StatusResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @DeleteMapping("/vehicles/{vehicle_id}")
-    public ResponseEntity<StatusResponse> kilometrageDelete(@PathVariable("vehicle_id") Long vehicleId) {
+    public ResponseEntity<StatusResponse> VehicleDelete(@PathVariable("vehicle_id") Long vehicleId) {
         try {
             vehicleRepository.deleteById(vehicleId);
             StatusResponse response = new StatusResponse(204,vehicleId.toString() +" has been successfully deleted");
-            return new ResponseEntity<StatusResponse>(response,HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             StatusResponse response = new StatusResponse(500,"failed to delete vehicle "+ vehicleId.toString());
-            return new ResponseEntity<StatusResponse>(response, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
         }
     }
 
