@@ -11,8 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,10 +31,10 @@ public class KilometrageController {
 
         if(data.isPresent()) {
             SuccessReponse response = new SuccessReponse(data.get());
-            return new ResponseEntity<SuccessReponse>(response, HttpStatus.OK);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
             StatusResponse response = new StatusResponse(404,"kilometrage ID or vehicle ID not found");
-            return new ResponseEntity<StatusResponse>(response,HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }
     }
 
@@ -45,10 +43,10 @@ public class KilometrageController {
         Optional<List<Kilometrage>> data = kilometrageRepository.findByVehicleId(vehicleId);
         if(data.isPresent()) {
             SuccessReponse response = new SuccessReponse(data.get());
-            return new ResponseEntity<SuccessReponse>(response, HttpStatus.OK);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
             StatusResponse response = new StatusResponse(404,"vehicle ID not found");
-            return new ResponseEntity<StatusResponse>(response,HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }
     }
 
@@ -63,13 +61,13 @@ public class KilometrageController {
                 kilometrage.setVehicle(vehicle.get());
                 Kilometrage _kilometrage = kilometrageRepository.save(kilometrage);
                 SuccessReponse response = new SuccessReponse(_kilometrage);
-                return new ResponseEntity<SuccessReponse>(response, HttpStatus.CREATED);
+                return new ResponseEntity<>(response, HttpStatus.CREATED);
             } else {
                 throw new Exception();
             }
         } catch (Exception e) {
             StatusResponse response = new StatusResponse(500,"failed to save the kilometrage");
-            return new ResponseEntity<StatusResponse>(response,HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -96,13 +94,13 @@ public class KilometrageController {
                     _kilometrage.setVehicle(kilometrage.getVehicle());
                 }
                 SuccessReponse response = new SuccessReponse(kilometrageRepository.save(_kilometrage));
-                return new ResponseEntity<SuccessReponse>(response, HttpStatus.OK);
+                return new ResponseEntity<>(response, HttpStatus.OK);
             } else {
                 throw new Exception();
             }
         } catch (Exception e) {
             StatusResponse response = new StatusResponse(500,"failed to update kilometrage");
-            return new ResponseEntity<StatusResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -111,10 +109,10 @@ public class KilometrageController {
         try {
             kilometrageRepository.deleteByVehicleIdAndId(vehicleId,kilometrageId);
             StatusResponse response = new StatusResponse(204,kilometrageId.toString() +" has been successfully deleted");
-            return new ResponseEntity<StatusResponse>(response,HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             StatusResponse response = new StatusResponse(500,"failed to delete kilometrage "+ kilometrageId.toString());
-            return new ResponseEntity<StatusResponse>(response, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
         }
     }
 

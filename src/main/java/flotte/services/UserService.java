@@ -12,7 +12,7 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    private TokenService tokenService;
+    private final TokenService tokenService;
 
 
     public UserService(TokenService tokenService) {
@@ -21,10 +21,7 @@ public class UserService {
 
     public String login(User user) {
         Optional<User> data = userRepository.findByUsernameAndPassword(user.getUsername(), user.getPassword());
-        if(data.isPresent()) {
-            return tokenService.generateToken(data.get());
-        }
-        return null;
+        return data.map(tokenService::generateToken).orElse(null);
     }
 
     public boolean logout(String token) {

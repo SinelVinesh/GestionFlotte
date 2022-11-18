@@ -4,9 +4,6 @@ import lombok.*;
 
 import javax.persistence.*;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
 @Entity
 @Setter
 @Getter
@@ -20,4 +17,6 @@ public class Vehicle {
 
     @Column(name = "license_plate")
     private String licensePlate;
+
+
 }

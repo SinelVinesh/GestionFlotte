@@ -1,7 +1,6 @@
 package flotte.repository;
 
 import flotte.model.Kilometrage;
-import flotte.model.Vehicle;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import javax.transaction.Transactional;

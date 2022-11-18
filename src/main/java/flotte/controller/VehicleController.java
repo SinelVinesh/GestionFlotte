@@ -1,6 +1,5 @@
 package flotte.controller;
 
-import flotte.model.Kilometrage;
 import flotte.model.Vehicle;
 import flotte.repository.KilometrageRepository;
 import flotte.repository.VehicleRepository;
@@ -31,10 +30,10 @@ public class VehicleController {
 
         if(data.isPresent()) {
             SuccessReponse response = new SuccessReponse(data.get());
-            return new ResponseEntity<SuccessReponse>(response, HttpStatus.OK);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
             StatusResponse response = new StatusResponse(404,"vehicle not found");
-            return new ResponseEntity<StatusResponse>(response,HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }
     }
 
@@ -42,7 +41,7 @@ public class VehicleController {
     public ResponseEntity<?> vehicleList() {
     List<Vehicle> data = vehicleRepository.findAll();
     SuccessReponse response = new SuccessReponse(data);
-    return new ResponseEntity<SuccessReponse>(response, HttpStatus.OK);
+    return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping(
@@ -88,7 +87,7 @@ public class VehicleController {
     public ResponseEntity<StatusResponse> VehicleDelete(@PathVariable("vehicle_id") Long vehicleId) {
         try {
             vehicleRepository.deleteById(vehicleId);
-            StatusResponse response = new StatusResponse(204,vehicleId.toString() +" has been successfully deleted");
+            StatusResponse response = new StatusResponse(204, vehicleId +" has been successfully deleted");
             return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             StatusResponse response = new StatusResponse(500,"failed to delete vehicle "+ vehicleId.toString());

@@ -25,10 +25,10 @@ public class AuthenticationController {
         responseData.put("token",token);
         if(token != null){
             SuccessReponse response = new SuccessReponse(responseData);
-            return new ResponseEntity<SuccessReponse>(response, HttpStatus.OK);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
             StatusResponse response = new StatusResponse(404,"user not found");
-            return new ResponseEntity<StatusResponse>(response,HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
         }
     }
 

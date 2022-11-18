@@ -1,7 +1,6 @@
 package flotte;
 
 import flotte.filters.Filter;
-import flotte.services.TokenService;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -9,8 +9,6 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -29,7 +27,7 @@ public class TokenService {
             Configuration config = configValue.get();
             long duration = Long.parseLong(config.getValue());
             LocalDateTime expiration = LocalDateTime.now().plusSeconds(duration);
-            String tokenString = user.getPassword() + user.getUsername() + expiration.toString();
+            String tokenString = user.getPassword() + user.getUsername() + expiration;
             String hash = DigestUtils.sha1Hex(tokenString);
             tokenRepository.deleteAllByUserId(user.getId());
             Token token = new Token();
@@ -44,11 +42,7 @@ public class TokenService {
 
     public boolean authenticate(String token) {
         Optional<Token> data = tokenRepository.findByToken(token);
-        if (data.isPresent()) {
-            return data.get().getExpiration().isAfter(LocalDateTime.now());
-        } else {
-            return false;
-        }
+        return data.map(value -> value.getExpiration().isAfter(LocalDateTime.now())).orElse(false);
     }
 
     public boolean removeToken(String token) {

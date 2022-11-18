@@ -1,10 +1,6 @@
 package flotte.filters;
 
-import flotte.response.StatusResponse;
 import flotte.services.TokenService;
-import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -16,7 +12,7 @@ import java.io.IOException;
 
 @Component
 public class Filter  extends OncePerRequestFilter {
-    private TokenService tokenService;
+    private final TokenService tokenService;
 
     public Filter(TokenService tokenService) {
         this.tokenService = tokenService;
@@ -27,8 +23,6 @@ public class Filter  extends OncePerRequestFilter {
         if(tokenService.authenticate(token)) {
             filterChain.doFilter(request, response);
         } else {
-            StatusResponse status = new StatusResponse(401,"unauthorized");
-            ResponseEntity<StatusResponse> failed = new ResponseEntity<>(status, HttpStatus.UNAUTHORIZED);
             response.setStatus(401);
         }
     }
