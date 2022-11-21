@@ -1,8 +1,10 @@
 package flotte.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Setter
@@ -17,6 +19,10 @@ public class Vehicle {
 
     @Column(name = "license_plate")
     private String licensePlate;
+
+    @OneToMany(mappedBy = "vehicle")
+    @JsonManagedReference
+    private List<Kilometrage> kilometrages;
 
 
 }

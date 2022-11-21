@@ -1,5 +1,6 @@
 package flotte.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -27,5 +28,6 @@ public class Kilometrage {
 
     @ManyToOne
     @JoinColumn(name="vehicle_id")
+    @JsonBackReference
     private Vehicle vehicle;
 }

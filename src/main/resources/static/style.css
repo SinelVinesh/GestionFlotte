@@ -1,0 +1,15 @@
+table,tr,th,td {
+    border: solid 1px;
+    border-collapse: collapse;
+}
+th,td {
+    text-align: center;
+    padding: 5px;
+}
+.clickable {
+    cursor: pointer;
+}
+
+.hoverable:hover {
+    background-color: #f5f5f5;
+}

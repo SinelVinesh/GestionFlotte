@@ -5,8 +5,11 @@ import flotte.model.Token;
 import flotte.model.User;
 import flotte.repository.ConfigurationRepository;
 import flotte.repository.TokenRepository;
+import flotte.response.StatusResponse;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -40,9 +43,13 @@ public class TokenService {
         return null;
     }
 
-    public boolean authenticate(String token) {
+    public ResponseEntity<?> authenticate(String token) {
         Optional<Token> data = tokenRepository.findByToken(token);
-        return data.map(value -> value.getExpiration().isAfter(LocalDateTime.now())).orElse(false);
+        if(data.map(value -> value.getExpiration().isAfter(LocalDateTime.now())).orElse(false)) {
+            return null;
+        } else {
+            return new ResponseEntity<>(new StatusResponse(401,"unathorized"), HttpStatus.UNAUTHORIZED);
+        }
     }
 
     public boolean removeToken(String token) {

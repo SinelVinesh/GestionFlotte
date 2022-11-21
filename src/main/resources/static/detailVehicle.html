@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Détail du véhicule</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Détail du véhicule <span id="id"></span></h1>
+    <div>
+        <strong>Plaque d'immatriculation :</strong>
+        <p><span id="plate"></span></p>
+    </div>
+    <div>
+        <strong>Liste des kilométrages</strong>
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Valeur initiale du compteur</th>
+                        <th>Valeur finale du compteur</th>
+                    </tr>
+                </thead>
+                <tbody id="kilometrage">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
+<script type="text/javascript">
+    function populateTable(data) {
+        const tbody = document.getElementById("kilometrage");
+        tbody.innerHTML = "";
+        for(element of data) {
+            const tr = document.createElement("tr");
+            tr.classList.add("hoverable")
+            const dateTd = document.createElement("td");
+            const startTd = document.createElement("td");
+            const endTd = document.createElement("td");
+            dateTd.innerHTML = element.date;
+            startTd.innerHTML = element.start;
+            endTd.innerHTML = element.end;
+            tr.append(dateTd);
+            tr.append(startTd);
+            tr.append(endTd);
+            tbody.append(tr);
+        }
+    }
+    window.addEventListener("load", function () {
+        let token = sessionStorage.getItem("token");
+        if(token === null) {
+            window.location.assign("http://localhost:8080/");
+            return;
+        }
+        function getData(id) {
+            let XHR
+            try {
+                XHR = new ActiveXObject("Msxml2.XMLHTTP");
+            } catch (e) {
+                try {
+                    XHR = new ActiveXObject("Microsoft.XMLHTTP");
+                } catch (e2) {
+                    try {
+                        XHR = new XMLHttpRequest();
+                    } catch (e3) {
+                        alert("XHR error : La connexion a echoue");
+                    }
+                }
+            }
+
+            // Define what happens on successful data submission
+            XHR.addEventListener("load", function(event) {
+                let response = JSON.parse(event.target.responseText);
+                if(response.status === 401) {
+                    window.location.assign("http://localhost:8080/");
+                    return;
+                }
+                const data =response.data;
+                document.getElementById("id").innerHTML = data.id;
+                document.getElementById("plate").innerHTML = data.licensePlate;
+                populateTable(data.kilometrages);
+            });
+
+            // Define what happens in case of error
+            XHR.addEventListener("error", function (event) {
+                console.log(event.target)
+                alert('Oops! Something went wrong.');
+            });
+
+            XHR.open("GET",`http://localhost:8080/vehicles/${id}`);
+            XHR.setRequestHeader("token", token);
+            XHR.send(null);
+
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get("id");
+
+        getData(id);
+    });
+</script>

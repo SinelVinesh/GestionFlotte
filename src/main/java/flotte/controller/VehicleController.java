@@ -2,9 +2,11 @@ package flotte.controller;
 
 import flotte.model.Vehicle;
 import flotte.repository.KilometrageRepository;
+import flotte.repository.TokenRepository;
 import flotte.repository.VehicleRepository;
 import flotte.response.StatusResponse;
 import flotte.response.SuccessReponse;
+import flotte.services.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin
 public class VehicleController {
 
     @Autowired
@@ -22,10 +25,17 @@ public class VehicleController {
     @Autowired
     VehicleRepository vehicleRepository;
 
+    TokenService tokenService;
+    public VehicleController(TokenService tokenService) {
+        this.tokenService = tokenService;
+    }
 
     @GetMapping(value="/vehicles/{vehicle_id}")
-    public ResponseEntity<?> vehicleValue(@PathVariable("vehicle_id") Long vehicleId) {
-
+    public ResponseEntity<?> vehicleValue(@PathVariable("vehicle_id") Long vehicleId, @RequestHeader("token") String token) {
+        ResponseEntity<?> authorization = tokenService.authenticate(token);
+        if(authorization != null) {
+            return authorization;
+        }
         Optional<Vehicle> data = vehicleRepository.findById(vehicleId);
 
         if(data.isPresent()) {
@@ -39,9 +49,9 @@ public class VehicleController {
 
     @GetMapping("/vehicles")
     public ResponseEntity<?> vehicleList() {
-    List<Vehicle> data = vehicleRepository.findAll();
-    SuccessReponse response = new SuccessReponse(data);
-    return new ResponseEntity<>(response, HttpStatus.OK);
+        List<Vehicle> data = vehicleRepository.findAll();
+        SuccessReponse response = new SuccessReponse(data);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping(

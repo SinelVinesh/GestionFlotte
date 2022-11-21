@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Accueil</title>
+</head>
+<body>
+<div>
+    <h4>Vehicules</h4>
+    <a href="http://localhost:8080/listeVehicle.html">Acceder directement a la liste des vehicules</a>
+</div>
+    <h4>Connexion</h4>
+    <div>
+        <label>Username :</label>
+        <input type="text">
+    </div>
+    <div>
+        <label>Password :</label>
+        <input type="password">
+    </div>
+    <button>Connexion</button>
+</body>
+</html>
+<script type="text/javascript">
+    window.addEventListener("load",function(){
+        function sendData() {
+            let XHR
+            try {
+                XHR = new ActiveXObject("Msxml2.XMLHTTP");
+            } catch (e) {
+                try {
+                    XHR = new ActiveXObject("Microsoft.XMLHTTP");
+                } catch (e2) {
+                    try {
+                        XHR = new XMLHttpRequest();
+                    } catch (e3) {
+                        alert("XHR error : La connexion a echoue");
+                    }
+                }
+            }
+
+            // Define what happens on successful data submission
+            XHR.addEventListener("load", function(event) {
+                let response = JSON.parse(event.target.responseText);
+                if(response.status != null) {
+                    alert(response.message);
+                    return;
+                }
+                sessionStorage.setItem("token", response.data.token);
+                window.location.assign("http://localhost:8080/listeVehicle.html");
+            });
+
+            // Define what happens in case of error
+            XHR.addEventListener("error", function (event) {
+                console.log(event.target)
+                alert('Oops! Something went wrong.');
+            });
+
+            // get username and password
+            let username = document.querySelector("input[type=text]").value;
+            let password = document.querySelector("input[type=password]").value;
+            // Set up our request body as json
+            let body = JSON.stringify({
+                username: username,
+                password: password
+            });
+            XHR.open("POST","http://localhost:8080/login");
+            XHR.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            XHR.send(body);
+
+        }
+        document.querySelector("button").addEventListener("click", sendData);
+    })
+</script>

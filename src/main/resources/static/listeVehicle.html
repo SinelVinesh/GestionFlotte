@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des vehicules</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h2>Liste des véhicules</h2>
+  <div>
+    <table>
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>Plaque</th>
+        </tr>
+      </thead>
+      <tbody id="vehicules">
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>
+
+<script type="text/javascript">
+
+  function populateTable(data) {
+    const tbody = document.getElementById("vehicules");
+    tbody.innerHTML = "";
+    for(element of data) {
+      const id = element.id;
+      const trElement = document.createElement("tr");
+      trElement.classList.add("hoverable");
+      trElement.classList.add("clickable");
+      trElement.id = "vehicle"+element.id;
+      trElement.onclick =(event) => {
+        window.location.assign("http://localhost:8080/detailVehicle.html?id=" + id)
+      };
+      const idTd = document.createElement("td");
+      const licensePlateTd = document.createElement("td");
+      idTd.innerHTML = element.id;
+      licensePlateTd.innerHTML = element.licensePlate;
+      trElement.append(idTd);
+      trElement.append(licensePlateTd);
+      tbody.append(trElement);
+    }
+  }
+
+  window.addEventListener("load", function () {
+
+    function getData() {
+      let XHR
+      try {
+        XHR = new ActiveXObject("Msxml2.XMLHTTP");
+      } catch (e) {
+        try {
+          XHR = new ActiveXObject("Microsoft.XMLHTTP");
+        } catch (e2) {
+          try {
+            XHR = new XMLHttpRequest();
+          } catch (e3) {
+            alert("XHR error : La connexion a echoue");
+          }
+        }
+      }
+
+      // Define what happens on successful data submission
+      XHR.addEventListener("load", function(event) {
+        let response = JSON.parse(event.target.responseText);
+        populateTable(response.data);
+      });
+
+      // Define what happens in case of error
+      XHR.addEventListener("error", function (event) {
+        console.log(event.target)
+        alert('Oops! Something went wrong.');
+      });
+
+      XHR.open("GET","http://localhost:8080/vehicles");
+      XHR.send(null);
+
+    }
+
+    getData();
+  })
+</script>
