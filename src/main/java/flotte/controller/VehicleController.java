@@ -49,7 +49,7 @@ public class VehicleController {
 
     @GetMapping("/vehicles")
     public ResponseEntity<?> vehicleList() {
-        List<Vehicle> data = vehicleRepository.findAll();
+        List<Vehicle> data = vehicleRepository.findAllWithoutKilometrage();
         SuccessReponse response = new SuccessReponse(data);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
