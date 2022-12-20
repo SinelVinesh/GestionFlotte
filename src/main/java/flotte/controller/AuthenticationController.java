@@ -27,8 +27,7 @@ public class AuthenticationController {
             SuccessReponse response = new SuccessReponse(responseData);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
-            StatusResponse response = new StatusResponse(404,"user not found");
-            return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Le nom d'utilisateur et/ou le mot de passe est incorrect");
         }
     }
 

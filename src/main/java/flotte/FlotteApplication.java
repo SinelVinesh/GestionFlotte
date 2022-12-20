@@ -19,7 +19,7 @@ public class FlotteApplication {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(@NonNull CorsRegistry registry) {
-                registry.addMapping("/*").allowedOriginPatterns("http://localhost:8100");
+                registry.addMapping("/*").allowedOriginPatterns("http://localhost:[*]");
             }
         };
     }

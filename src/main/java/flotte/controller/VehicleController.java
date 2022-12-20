@@ -1,6 +1,8 @@
 package flotte.controller;
 
+import flotte.model.Image;
 import flotte.model.Vehicle;
+import flotte.repository.ImageRepository;
 import flotte.repository.KilometrageRepository;
 import flotte.repository.TokenRepository;
 import flotte.repository.VehicleRepository;
@@ -24,6 +26,9 @@ public class VehicleController {
     KilometrageRepository kilometrageRepository;
     @Autowired
     VehicleRepository vehicleRepository;
+
+    @Autowired
+    ImageRepository imageRepository;
 
     TokenService tokenService;
     public VehicleController(TokenService tokenService) {
@@ -49,7 +54,7 @@ public class VehicleController {
 
     @GetMapping("/vehicles")
     public ResponseEntity<?> vehicleList() {
-        List<Vehicle> data = vehicleRepository.findAllWithoutKilometrage();
+        List<Vehicle> data = vehicleRepository.findAll();
         SuccessReponse response = new SuccessReponse(data);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -94,15 +99,35 @@ public class VehicleController {
     }
 
     @DeleteMapping("/vehicles/{vehicle_id}")
-    public ResponseEntity<StatusResponse> VehicleDelete(@PathVariable("vehicle_id") Long vehicleId) {
+    public ResponseEntity<StatusResponse> vehicleDelete(@PathVariable("vehicle_id") Long vehicleId) {
         try {
             vehicleRepository.deleteById(vehicleId);
             StatusResponse response = new StatusResponse(204, vehicleId +" has been successfully deleted");
-            return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(response,HttpStatus.OK);
         } catch (Exception e) {
             StatusResponse response = new StatusResponse(500,"failed to delete vehicle "+ vehicleId.toString());
-            return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(response,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+    @PostMapping("/vehicles/{vehicle_id}/image")
+    public ResponseEntity<StatusResponse> imageUpload(@RequestBody Vehicle vehicle, @PathVariable Long vehicle_id) {
+        try {
+            if(!vehicle.getId().equals(vehicle_id)) throw new Exception();
+            Optional<Vehicle> data = vehicleRepository.findById(vehicle_id);
+            if(data.isPresent()) {
+                Vehicle target = data.get();
+                Image toSave = vehicle.getImage();
+                imageRepository.save(toSave);
+                target.setImage(toSave);
+                vehicleRepository.save(target);
+                return ResponseEntity.ok(new StatusResponse(200, "L'image a bien été sauvegardée"));
+            } else {
+                throw new Exception();
+            }
+        } catch (Exception e) {
+            StatusResponse response = new StatusResponse(500,"La sauvegarde de l'image a échoué, veuillez réessayer");
+            return new ResponseEntity<>(response,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

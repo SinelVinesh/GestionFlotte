@@ -13,14 +13,16 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "vehicle")
 public class Vehicle {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
     @Column(name = "license_plate")
     private String licensePlate;
+
+    @OneToOne
+    @JoinColumn(name = "image_id")
+    private Image image;
 
     @JsonInclude(Include.NON_NULL)
     @OneToMany(mappedBy = "vehicle")
