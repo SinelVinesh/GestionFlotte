@@ -1,11 +1,9 @@
 package flotte.controller;
 
 import flotte.model.Image;
+import flotte.model.Insurance;
 import flotte.model.Vehicle;
-import flotte.repository.ImageRepository;
-import flotte.repository.KilometrageRepository;
-import flotte.repository.TokenRepository;
-import flotte.repository.VehicleRepository;
+import flotte.repository.*;
 import flotte.response.StatusResponse;
 import flotte.response.SuccessReponse;
 import flotte.services.TokenService;
@@ -29,6 +27,9 @@ public class VehicleController {
 
     @Autowired
     ImageRepository imageRepository;
+
+    @Autowired
+    InsuranceRepository insuranceRepository;
 
     TokenService tokenService;
     public VehicleController(TokenService tokenService) {
@@ -55,6 +56,12 @@ public class VehicleController {
     @GetMapping("/vehicles")
     public ResponseEntity<?> vehicleList() {
         List<Vehicle> data = vehicleRepository.findAll();
+        for(Vehicle element : data) {
+            Optional<Insurance> mostRecent = insuranceRepository.findFirstByVehicleOrderByEndDesc(element);
+            if(mostRecent.isPresent()) {
+                element.setCurrentInsurance(mostRecent.get());
+            }
+        }
         SuccessReponse response = new SuccessReponse(data);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

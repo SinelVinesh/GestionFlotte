@@ -3,6 +3,7 @@ package flotte.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.persistence.*;
@@ -28,6 +29,9 @@ public class Vehicle {
     @OneToMany(mappedBy = "vehicle")
     @JsonManagedReference
     private List<Kilometrage> kilometrages;
+
+    @Transient
+    private Insurance currentInsurance;
 
     public Vehicle(long id,String licensePlate) {
         this.id = id;
